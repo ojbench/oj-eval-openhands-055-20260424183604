@@ -1,5 +1,5 @@
-#include &lt;iostream&gt;
-#include &lt;algorithm&gt;
+#include <iostream>
+#include <algorithm>
 #include "base.hpp"
 
 using namespace std;
@@ -12,16 +12,16 @@ struct date
     date(int y, int m, int d) : year(y), month(m), day(d) {}
     
     // Stream input operator
-    friend istream& operator&gt;&gt;(istream& is, date& d) {
-        is &gt;&gt; d.year &gt;&gt; d.month &gt;&gt; d.day;
+    friend istream& operator>>(istream& is, date& d) {
+        is >> d.year >> d.month >> d.day;
         return is;
     }
     
     // Comparison operator for dates
-    bool operator&lt;(const date& other) const {
-        if (year != other.year) return year &lt; other.year;
-        if (month != other.month) return month &lt; other.month;
-        return day &lt; other.day;
+    bool operator<(const date& other) const {
+        if (year != other.year) return year < other.year;
+        if (month != other.month) return month < other.month;
+        return day < other.day;
     }
 };
 
@@ -59,16 +59,16 @@ public:
     {
         // Call base class print function
         object::print();
-        cout &lt;&lt; "[mail] postmark: " &lt;&lt; postmark &lt;&lt; endl;
+        cout << "[mail] postmark: " << postmark << endl;
     }
 
     // Copy function implementation
     void copy(object *o) override
     {
-        contain = reinterpret_cast&lt;mail *&gt;(o)-&gt;contain;
-        postmark = reinterpret_cast&lt;mail *&gt;(o)-&gt;postmark;
-        send_date = reinterpret_cast&lt;mail *&gt;(o)-&gt;send_date;
-        arrive_date = reinterpret_cast&lt;mail *&gt;(o)-&gt;arrive_date;
+        contain = reinterpret_cast<mail *>(o)->contain;
+        postmark = reinterpret_cast<mail *>(o)->postmark;
+        send_date = reinterpret_cast<mail *>(o)->send_date;
+        arrive_date = reinterpret_cast<mail *>(o)->arrive_date;
     }
 };
 
@@ -93,13 +93,13 @@ public:
     string send_status(int y, int m, int d) override
     {
         date ask_date(y, m, d);
-        if (ask_date &lt; send_date)
+        if (ask_date < send_date)
             return "mail not send";
-        else if (ask_date &lt; take_off_date)
+        else if (ask_date < take_off_date)
             return "wait in airport";
-        else if (ask_date &lt; land_date)
+        else if (ask_date < land_date)
             return "in flight";
-        else if (ask_date &lt; arrive_date)
+        else if (ask_date < arrive_date)
             return "already land";
         else
             return "already arrive";
@@ -116,7 +116,7 @@ public:
     {
         // Call base class print function
         mail::print();
-        cout &lt;&lt; "[air] airlines: " &lt;&lt; airlines &lt;&lt; endl;
+        cout << "[air] airlines: " << airlines << endl;
     }
 
     // Copy function implementation
@@ -124,10 +124,10 @@ public:
     {
         // Call base class copy
         mail::copy(o);
-        air_mail* other = reinterpret_cast&lt;air_mail *&gt;(o);
-        take_off_date = other-&gt;take_off_date;
-        land_date = other-&gt;land_date;
-        airlines = other-&gt;airlines;
+        air_mail* other = reinterpret_cast<air_mail *>(o);
+        take_off_date = other->take_off_date;
+        land_date = other->land_date;
+        airlines = other->airlines;
     }
 };
 
@@ -146,7 +146,7 @@ public:
         len = station_num;
         station_name = new string[len];
         station_time = new date[len];
-        for (int i = 0; i &lt; len; i++) {
+        for (int i = 0; i < len; i++) {
             station_name[i] = sname[i];
             station_time[i] = stime[i];
         }
@@ -162,18 +162,18 @@ public:
     string send_status(int y, int m, int d) override
     {
         date ask_date(y, m, d);
-        if (ask_date &lt; send_date)
+        if (ask_date < send_date)
             return "mail not send";
-        else if (ask_date &lt; station_time[0])
+        else if (ask_date < station_time[0])
             return "wait in station";
-        else if (ask_date &lt; station_time[len-1]) {
+        else if (ask_date < station_time[len-1]) {
             // Find current station
-            for (int i = 0; i &lt; len-1; i++) {
-                if (ask_date &lt; station_time[i+1])
+            for (int i = 0; i < len-1; i++) {
+                if (ask_date < station_time[i+1])
                     return "in train, next station: " + station_name[i+1];
             }
         }
-        else if (ask_date &lt; arrive_date)
+        else if (ask_date < arrive_date)
             return "already arrive at final station";
         else
             return "already arrive";
@@ -191,7 +191,7 @@ public:
     {
         // Call base class print function
         mail::print();
-        cout &lt;&lt; "[train] station_num: " &lt;&lt; len &lt;&lt; endl;
+        cout << "[train] station_num: " << len << endl;
     }
 
     // Copy function implementation
@@ -199,14 +199,14 @@ public:
     {
         // Call base class copy
         mail::copy(o);
-        train_mail* other = reinterpret_cast&lt;train_mail *&gt;(o);
-        len = other-&gt;len;
+        train_mail* other = reinterpret_cast<train_mail *>(o);
+        len = other->len;
         // Allocate new memory
         station_name = new string[len];
         station_time = new date[len];
-        for (int i = 0; i &lt; len; i++) {
-            station_name[i] = other-&gt;station_name[i];
-            station_time[i] = other-&gt;station_time[i];
+        for (int i = 0; i < len; i++) {
+            station_name[i] = other->station_name[i];
+            station_time[i] = other->station_time[i];
         }
     }
 };
@@ -230,9 +230,9 @@ public:
     string send_status(int y, int m, int d) override
     {
         date ask_date(y, m, d);
-        if (ask_date &lt; send_date)
+        if (ask_date < send_date)
             return "mail not send";
-        else if (ask_date &lt; arrive_date) {
+        else if (ask_date < arrive_date) {
             // Calculate total time in days (using the 360-day year system)
             int total_time = (arrive_date.year - send_date.year) * 360 + 
                            (arrive_date.month - send_date.month) * 30 + 
@@ -242,7 +242,7 @@ public:
                              (ask_date.day - send_date.day);
             
             // Calculate current mile using double for precision
-            double current_mile = static_cast&lt;double&gt;(elapsed_time) / total_time * total_mile;
+            double current_mile = static_cast<double>(elapsed_time) / total_time * total_mile;
             return to_string(current_mile);
         }
         else
@@ -260,7 +260,7 @@ public:
     {
         // Call base class print function
         mail::print();
-        cout &lt;&lt; "[car] driver_name: " &lt;&lt; driver &lt;&lt; endl;
+        cout << "[car] driver_name: " << driver << endl;
     }
 
     // Copy function implementation
@@ -268,14 +268,14 @@ public:
     {
         // Call base class copy
         mail::copy(o);
-        car_mail* other = reinterpret_cast&lt;car_mail *&gt;(o);
-        total_mile = other-&gt;total_mile;
-        driver = other-&gt;driver;
+        car_mail* other = reinterpret_cast<car_mail *>(o);
+        total_mile = other->total_mile;
+        driver = other->driver;
     }
 };
 
 // Implementation of obj_swap function
-void obj_swap(object *&amp;lhs, object *&amp;rhs) {
+void obj_swap(object *&lhs, object *&rhs) {
     object* temp = lhs;
     lhs = rhs;
     rhs = temp;
